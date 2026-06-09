@@ -1,0 +1,24 @@
+{
+  "name": "open-finance-aisp-demo",
+  "version": "1.0.0",
+  "description": "Open Finance Colombia AISP demo with Minka Ledger integration",
+  "private": true,
+  "scripts": {
+    "dev": "npm-run-all --parallel dev:*",
+    "dev:backend": "cd backend && npm start",
+    "dev:frontend": "cd frontend && npm run dev",
+    "install:all": "npm-run-all install:*",
+    "install:backend": "cd backend && npm install",
+    "install:frontend": "cd frontend && npm install",
+    "seed": "cd backend && node src/seed.js"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ximena-lgtm/open-finance-aisp-demo.git"
+  },
+  "author": "Ximena López Cifuentes",
+  "license": "MIT"
+}
