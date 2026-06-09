@@ -1,0 +1,156 @@
+:root{
+  --bg:#131319; --bg-deep:#0F0F14; --card:#1E1E26; --card-2:#25252F;
+  --card-dark:#111116; --border:#2A2A35; --text:#FFFFFF; --text-2:#8A8A9A;
+  --text-3:#B0B0C0; --yellow:#FFD100; --red:#BE1622; --red-soft:#FFAAAA;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:#08080b;color:var(--text);
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:24px;
+}
+#root{width:100%;display:flex;justify-content:center}
+
+/* ----- Phone shell ----- */
+.phone{
+  width:375px;height:812px;background:var(--bg);border-radius:40px;
+  position:relative;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.6);
+  display:flex;flex-direction:column;
+}
+.statusbar{
+  height:44px;flex:0 0 44px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;font-size:13px;font-weight:600;
+}
+.statusbar .right{font-weight:400;font-size:12px;opacity:.9}
+.screen{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+.screen::-webkit-scrollbar{width:0}
+.pad{padding:0 24px}
+
+/* ----- Header ----- */
+.appbar{display:flex;align-items:center;gap:12px;padding:8px 24px 16px}
+.appbar h1{font-size:22px;font-weight:700}
+.appbar .sub{font-size:15px;font-weight:600}
+.back{background:none;border:none;color:var(--text);cursor:pointer;display:flex;padding:4px}
+.avatar{margin-left:auto;width:36px;height:36px;border-radius:50%;background:#2C2C3A;
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+
+/* brand bar */
+.brandbar{padding:18px 24px;position:relative;background:#fff}
+.brandbar.bancolombia::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:var(--yellow)}
+.brandbar.nu::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:#820AD1}
+.brandbar.daviplata::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:var(--red)}
+.brandbar .bname{font-size:18px;font-weight:700;color:#000}
+.brandbar .bsub{font-size:11px;color:#666}
+
+/* ----- Typography ----- */
+.hero{font-size:24px;font-weight:700;line-height:1.2;margin:8px 0}
+.hero.sm{font-size:22px}
+.lead{font-size:13px;color:var(--text-2);line-height:1.45}
+.section-label{font-size:13px;font-weight:600;margin:20px 0 10px}
+.tiny{font-size:11px;color:var(--text-2);line-height:1.5}
+.note{font-size:10px;color:var(--text-2);line-height:1.5}
+
+/* ----- Cards & lists ----- */
+.card{background:var(--card);border-radius:14px;padding:16px}
+.card-2{background:var(--card-2);border-radius:12px;padding:14px}
+.row{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:12px;
+  padding:14px 16px;border:1px solid transparent;cursor:pointer;width:100%;text-align:left;color:inherit}
+.row:hover{border-color:var(--border)}
+.row.selected{border-color:#fff}
+.row .meta{flex:1}
+.row .title{font-size:13px;font-weight:500}
+.row .desc{font-size:11px;color:var(--text-2)}
+.stack{display:flex;flex-direction:column;gap:10px}
+
+.divider{height:1px;background:var(--border);margin:16px 24px}
+
+.quick{display:flex;gap:12px;margin-top:14px}
+.quick .qbtn{flex:1;height:72px;background:var(--card);border-radius:16px;display:flex;
+  flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:11px;color:var(--text-3)}
+
+.balance-card{background:var(--card);border-radius:16px;padding:18px 20px;margin-top:8px}
+.balance-card .lbl{font-size:12px;color:var(--text-2)}
+.balance-card .amt{font-size:28px;font-weight:700;margin-top:4px}
+
+/* ----- Steps ----- */
+.step{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+.step .num{width:22px;height:22px;border-radius:50%;background:var(--card-2);color:var(--text-2);
+  font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:0 0 22px}
+.step .txt{font-size:12px;color:var(--text-3);line-height:1.4;padding-top:2px}
+
+.prog-row{display:flex;align-items:center;gap:12px;border-radius:12px;padding:12px 14px;font-size:13px}
+.prog-row.done{background:var(--card-dark);color:var(--text-2)}
+.prog-row.active{background:var(--card-2);color:#fff}
+.prog-row.pending{background:var(--card);color:var(--text-2)}
+.dot{width:18px;height:18px;border-radius:50%;flex:0 0 18px;display:flex;align-items:center;justify-content:center}
+.dot.done{background:var(--yellow);color:#000}
+.dot.active{border:2px solid #fff}
+.dot.pending{border:2px solid var(--border)}
+
+/* ----- Scopes ----- */
+.scope{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:10px;padding:12px 14px;font-size:12px}
+.scope .chk{width:20px;height:20px;border-radius:6px;background:rgba(255,255,255,.08);
+  display:flex;align-items:center;justify-content:center;flex:0 0 20px}
+.purpose{display:flex;align-items:center;gap:12px;background:var(--card-2);border-radius:10px;
+  padding:11px 14px;font-size:12px;color:var(--text-2);margin-top:10px}
+
+/* ----- Inputs ----- */
+.field{background:var(--card);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.field input{background:none;border:none;color:#fff;font-size:14px;flex:1;outline:none;font-family:inherit}
+.field input::placeholder{color:var(--text-2)}
+.field .lbl{font-size:10px;color:var(--text-2)}
+.search{background:var(--card);border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:center;margin:6px 0 14px}
+.search input{background:none;border:none;color:#fff;outline:none;flex:1;font-size:14px;font-family:inherit}
+.search input::placeholder{color:var(--text-2)}
+
+.otp{display:flex;gap:8px;margin:10px 0}
+.otp input{width:44px;height:52px;border-radius:10px;background:var(--bg-deep);border:1px solid var(--border);
+  text-align:center;font-size:20px;color:#fff;outline:none;font-family:inherit}
+.otp input:focus{border-color:#fff}
+
+/* ----- Buttons / footer ----- */
+.footer{margin-top:auto;padding:16px 24px 28px}
+.btn{width:100%;height:56px;border-radius:14px;border:none;font-size:15px;font-weight:600;
+  cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-yellow{background:var(--yellow);color:#000}
+.btn-red{background:var(--red);color:#fff}
+.btn-purple{background:#820AD1;color:#fff}
+.btn-white{background:#fff;color:#000}
+.btn-ghost{background:var(--card-2);color:var(--text-2)}
+.btn-row{display:flex;gap:12px}
+.btn-row .btn{flex:1}
+.linkbtn{background:none;border:none;color:var(--text-2);font-size:13px;cursor:pointer;
+  width:100%;text-align:center;margin-top:14px;font-family:inherit}
+
+/* ----- Tab bar ----- */
+.tabbar{display:flex;justify-content:space-around;align-items:center;height:74px;
+  background:var(--card);border-top:1px solid var(--border);flex:0 0 74px}
+.tab{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;color:var(--text-2);
+  background:none;border:none;cursor:pointer;font-family:inherit}
+.tab.active{color:#fff}
+
+/* ----- Success ----- */
+.success-hero{display:flex;flex-direction:column;align-items:center;gap:14px;padding:36px 24px 12px}
+.success-circle{width:80px;height:80px;border-radius:50%;background:var(--card-2);
+  display:flex;align-items:center;justify-content:center}
+.amount-block{text-align:center;padding:8px 24px}
+.amount-block .big{font-size:33px;font-weight:700;margin:4px 0}
+.cond{display:flex;justify-content:space-between;align-items:center;background:var(--card);
+  border-radius:12px;padding:15px 16px;font-size:13px}
+.cond .k{color:var(--text-2)}
+.cond .v{font-weight:600}
+
+/* ----- redirect pill / spinner ----- */
+.pill{display:flex;align-items:center;gap:8px;background:var(--card-2);border-radius:8px;
+  padding:8px 12px;font-size:11px;color:var(--text-3);margin-bottom:16px;width:fit-content}
+.spinner-wrap{display:flex;flex-direction:column;align-items:center;gap:8px;padding:30px 0}
+.spinner{width:96px;height:96px;border-radius:50%;border:4px solid var(--card-2);
+  border-top-color:var(--yellow);animation:spin 1s linear infinite;display:flex;
+  align-items:center;justify-content:center}
+.spinner .inner{width:64px;height:64px;border-radius:50%;background:var(--card-2);
+  display:flex;align-items:center;justify-content:center}
+@keyframes spin{to{transform:rotate(360deg)}}
+.center-text{text-align:center;padding:0 24px}
+.err{color:#ff6b6b;font-size:12px;margin-top:8px;text-align:center}

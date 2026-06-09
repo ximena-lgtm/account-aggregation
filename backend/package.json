@@ -1,0 +1,19 @@
+{
+  "name": "open-finance-aisp-backend",
+  "version": "1.0.0",
+  "description": "Backend Node/Express + SQLite para el flujo AISP de Open Finance Colombia",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "seed": "node src/seed.js"
+  },
+  "dependencies": {
+    "@minka/ledger-sdk": "^2.41.0",
+    "better-sqlite3": "^11.8.1",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "nanoid": "^5.0.9"
+  }
+}

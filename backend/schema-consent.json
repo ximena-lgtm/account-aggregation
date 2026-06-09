@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Open Finance Consent Schema",
+  "description": "Schema for Open Finance Colombia consent anchors",
+  "properties": {
+    "handle": {
+      "type": "string",
+      "pattern": "^consent_",
+      "description": "Unique consent identifier"
+    },
+    "schema": {
+      "type": "string",
+      "const": "consent-1"
+    },
+    "wallet": {
+      "type": "string",
+      "description": "Titular pseudonym (HMAC-SHA256)"
+    },
+    "target": {
+      "type": "string",
+      "description": "TPP identifier (Third Party Provider)"
+    },
+    "source": {
+      "type": "string",
+      "description": "Data Provider identifier"
+    },
+    "custom": {
+      "type": "object",
+      "required": [
+        "consent_id",
+        "tpp_id",
+        "data_provider_id",
+        "titular_ref",
+        "data_scope",
+        "purpose",
+        "duration_days",
+        "expires_at"
+      ],
+      "properties": {
+        "consent_id": { "type": "string" },
+        "tpp_id": { "type": "string" },
+        "tpp_legal_name": { "type": "string" },
+        "data_provider_id": { "type": "string" },
+        "data_provider_source": { "type": "string" },
+        "titular_ref": { "type": "string" },
+        "data_scope": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "purpose": { "type": "string" },
+        "duration_days": { "type": "integer" },
+        "commercialization_flag": { "type": "boolean" },
+        "compensation_flag": { "type": "boolean" },
+        "expires_at": { "type": "string", "format": "date-time" },
+        "granted_at": { "type": ["string", "null"], "format": "date-time" },
+        "sca_method": { "type": ["string", "null"] },
+        "double_check_confirmed_at": { "type": ["string", "null"], "format": "date-time" },
+        "access_token_hash": { "type": ["string", "null"] },
+        "refresh_token_hash": { "type": ["string", "null"] },
+        "token_expires_at": { "type": ["string", "null"], "format": "date-time" },
+        "revoked_at": { "type": ["string", "null"], "format": "date-time" },
+        "revoked_by": { "type": ["string", "null"] },
+        "revocation_reason": { "type": ["string", "null"] }
+      }
+    }
+  },
+  "required": ["handle", "schema", "wallet", "target", "source", "custom"]
+}
