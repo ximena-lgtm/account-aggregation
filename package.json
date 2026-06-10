@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Open Finance Colombia AISP demo with Minka Ledger integration",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "npm-run-all --parallel dev:*",
     "dev:backend": "cd backend && npm start",
@@ -11,6 +12,11 @@
     "install:backend": "cd backend && npm install",
     "install:frontend": "cd frontend && npm install",
     "seed": "cd backend && node src/seed.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "nanoid": "^5.0.9"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.5"
