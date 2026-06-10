@@ -14,6 +14,7 @@ Los consentimientos se registran en el **Minka Ledger** usando el schema `of-con
 - **Activación (active)**: Al autorizar con OTP
 - **Proofs inmutables**: Cadena de eventos con tokens y estados
 - **Compliance**: Propósito, tratamiento, comercialización, y pseudonimización de titular
+- **Storage en memoria**: Los datos del demo (aplicaciones, consentimientos) se almacenan en memoria. Los consentimientos importantes están seguros en Minka Ledger.
 
 ## Las 8 pantallas
 1. **Home** — Dashboard de Openbank
@@ -66,6 +67,42 @@ npm run dev      # http://localhost:5174 (proxy /api -> :4000)
 
 Abre http://localhost:5174 y recorre el flujo desde "Solicitar crédito".
 El OTP de la pantalla SCA acepta cualquier código de 6 dígitos.
+
+## Deploy a Vercel
+
+### Requisitos
+- Cuenta de [Vercel](https://vercel.com)
+- Credenciales de Minka Ledger (SIGNER_PUBLIC y SIGNER_SECRET)
+
+### Pasos
+
+1. **Fork o clona este repositorio**
+
+2. **Conecta con Vercel**
+   ```bash
+   npm i -g vercel
+   vercel login
+   vercel
+   ```
+
+3. **Configura las variables de entorno en Vercel**
+
+   En el dashboard de Vercel, ve a Settings → Environment Variables y agrega:
+
+   ```
+   LEDGER_URL=https://open-finance-1.ldg-dev.one/api/v2
+   SIGNER_PUBLIC=tu_clave_publica
+   SIGNER_SECRET=tu_clave_secreta
+   ```
+
+4. **Deploy**
+   ```bash
+   vercel --prod
+   ```
+
+### Nota sobre Storage
+
+Esta aplicación usa **storage en memoria** para el demo. Los datos se reinician en cada deploy, pero los **consentimientos importantes están permanentemente en Minka Ledger**.
 
 ## API
 - `GET  /api/banks` — Directorio SFC
