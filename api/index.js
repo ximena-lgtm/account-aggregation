@@ -1,7 +1,6 @@
-// Vercel serverless entry point — wraps the Express app
 import express from "express";
 import cors from "cors";
-import db from "../backend/src/storage.js";
+import db from "./storage.js";
 
 const USE_MOCK = process.env.USE_MOCK_LEDGER === "true";
 const ledgerModule = USE_MOCK ? "../backend/src/ledger-mock.js" : "../backend/src/ledger.js";
@@ -11,7 +10,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const now = () => new Date().toISOString();
 const daysFromNow = (d) => new Date(Date.now() + d * 864e5).toISOString();
 
 const DEFAULT_SCOPES = {
@@ -44,19 +42,19 @@ app.get("/api/banks", (req, res) => {
   res.json({ count: banks.length, banks });
 });
 
-app.post("/api/applications", (req, res) => {
-  const application = db.createApplication({ status: "draft" });
+app.post("/api/applications", async (req, res) => {
+  const application = await db.createApplication({ status: "draft" });
   res.status(201).json({ id: application.id, status: application.status });
 });
 
 app.post("/api/applications/:id/banks", async (req, res) => {
-  const appRow = db.getApplication(req.params.id);
+  const appRow = await db.getApplication(req.params.id);
   if (!appRow) return res.status(404).json({ error: "Solicitud no encontrada" });
   const { bankIds } = req.body;
   if (!Array.isArray(bankIds) || bankIds.length === 0)
     return res.status(400).json({ error: "Selecciona al menos un banco" });
 
-  db.deleteConsents(appRow.id);
+  await db.deleteConsents(appRow.id);
   const created = [];
 
   for (const bankId of bankIds) {
@@ -70,7 +68,7 @@ app.post("/api/applications/:id/banks", async (req, res) => {
         return `category_${index + 1}_${normalized}`;
       });
 
-      const consent = db.createConsent({
+      const consent = await db.createConsent({
         application_id: appRow.id,
         bank_id: bankId,
         scopes: JSON.stringify(scopes),
@@ -91,11 +89,11 @@ app.post("/api/applications/:id/banks", async (req, res) => {
         duration_days: 90,
       });
 
-      db.updateConsent(consent.id, { ledger_handle: consentHandle });
+      await db.updateConsent(consent.id, { ledger_handle: consentHandle });
       created.push(consent.id);
     } catch (error) {
       console.error(`Error creating consent in ledger:`, error.message);
-      const consent = db.createConsent({
+      const consent = await db.createConsent({
         application_id: appRow.id,
         bank_id: bankId,
         scopes: JSON.stringify(scopes),
@@ -108,19 +106,19 @@ app.post("/api/applications/:id/banks", async (req, res) => {
     }
   }
 
-  db.updateApplication(appRow.id, { status: "banks_selected" });
+  await db.updateApplication(appRow.id, { status: "banks_selected" });
   res.status(201).json({ applicationId: appRow.id, consents: created });
 });
 
-app.get("/api/consents/:id", (req, res) => {
-  const c = db.getConsent(req.params.id);
+app.get("/api/consents/:id", async (req, res) => {
+  const c = await db.getConsent(req.params.id);
   if (!c) return res.status(404).json({ error: "Consentimiento no encontrado" });
   const bank = db.getBank(c.bank_id);
   res.json({ ...c, scopes: JSON.parse(c.scopes), bank });
 });
 
 app.post("/api/consents/:id/authorize", async (req, res) => {
-  const c = db.getConsent(req.params.id);
+  const c = await db.getConsent(req.params.id);
   if (!c) return res.status(404).json({ error: "Consentimiento no encontrado" });
 
   const { otp } = req.body || {};
@@ -133,27 +131,27 @@ app.post("/api/consents/:id/authorize", async (req, res) => {
     }
     await activateConsentAnchor(c.ledger_handle, "password+otp");
     const expiresAt = daysFromNow(90);
-    db.updateConsent(c.id, { status: "authorized", expires_at: expiresAt });
+    await db.updateConsent(c.id, { status: "authorized", expires_at: expiresAt });
     res.json({ id: c.id, status: "authorized", expires_at: expiresAt, ledger_handle: c.ledger_handle });
   } catch (error) {
     console.error("Error activating consent in ledger:", error.message);
     const expiresAt = daysFromNow(90);
-    db.updateConsent(c.id, { status: "authorized", expires_at: expiresAt });
+    await db.updateConsent(c.id, { status: "authorized", expires_at: expiresAt });
     res.json({ id: c.id, status: "authorized", expires_at: expiresAt, ledger_error: error.message });
   }
 });
 
-app.post("/api/consents/:id/deny", (req, res) => {
-  const c = db.getConsent(req.params.id);
+app.post("/api/consents/:id/deny", async (req, res) => {
+  const c = await db.getConsent(req.params.id);
   if (!c) return res.status(404).json({ error: "Consentimiento no encontrado" });
-  db.updateConsent(c.id, { status: "denied" });
+  await db.updateConsent(c.id, { status: "denied" });
   res.json({ id: c.id, status: "denied" });
 });
 
-app.post("/api/applications/:id/evaluate", (req, res) => {
-  const appRow = db.getApplication(req.params.id);
+app.post("/api/applications/:id/evaluate", async (req, res) => {
+  const appRow = await db.getApplication(req.params.id);
   if (!appRow) return res.status(404).json({ error: "Solicitud no encontrada" });
-  const consents = db.getConsentsByApplication(appRow.id);
+  const consents = await db.getConsentsByApplication(appRow.id);
   const authorized = consents.filter((c) => c.status === "authorized");
   if (authorized.length === 0)
     return res.status(400).json({ error: "No hay consentimientos autorizados" });
@@ -171,7 +169,7 @@ app.post("/api/applications/:id/evaluate", (req, res) => {
   );
   const bankNames = authorized.map((c) => db.getBank(c.bank_id)?.name).filter(Boolean).join(" y ");
 
-  const decision = db.createDecision({
+  const decision = await db.createDecision({
     application_id: appRow.id,
     approved: approved ? 1 : 0,
     amount,
@@ -183,7 +181,7 @@ app.post("/api/applications/:id/evaluate", (req, res) => {
     rationale: `Cupo calculado con base en tu historial de ${bankNames} via Open Finance.`,
   });
 
-  db.updateApplication(appRow.id, { status: approved ? "approved" : "denied" });
+  await db.updateApplication(appRow.id, { status: approved ? "approved" : "denied" });
 
   res.json({
     id: decision.id,
@@ -200,16 +198,13 @@ app.post("/api/applications/:id/evaluate", (req, res) => {
   });
 });
 
-app.get("/api/applications/:id", (req, res) => {
-  const appRow = db.getApplication(req.params.id);
+app.get("/api/applications/:id", async (req, res) => {
+  const appRow = await db.getApplication(req.params.id);
   if (!appRow) return res.status(404).json({ error: "Solicitud no encontrada" });
-  const consents = db.getConsentsByApplication(appRow.id).map((c) => ({
-    ...c,
-    scopes: JSON.parse(c.scopes),
-    bank: db.getBank(c.bank_id),
-  }));
-  const decisions = db.getDecisionsByApplication(appRow.id);
-  res.json({ ...appRow, consents, decision: decisions[0] });
+  const consents = await db.getConsentsByApplication(appRow.id);
+  const mappedConsents = consents.map((c) => ({ ...c, scopes: JSON.parse(c.scopes), bank: db.getBank(c.bank_id) }));
+  const decisions = await db.getDecisionsByApplication(appRow.id);
+  res.json({ ...appRow, consents: mappedConsents, decision: decisions[0] });
 });
 
 export default app;
